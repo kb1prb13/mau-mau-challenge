@@ -36,6 +36,10 @@ public class Player {
      * Flag if the player must skip his turn
      */
     private boolean mustSkipTurn;
+    /**
+     * Flag if the player must draw cards in case a special card has been used
+     */
+    private boolean mustDrawCards;
 
     public Player(String name, boolean isHuman) {
         this.name = name;
@@ -44,6 +48,7 @@ public class Player {
         this.wins = 0;
         this.points = 0;
         this.mustSkipTurn = false;
+        this.mustDrawCards = false;
     }
 
     /**

@@ -21,7 +21,7 @@ public class Deck {
     private List<Card> playedCards;
 
     /**
-     * Initialize the deck creating an initial stack of a {@link Card}s.
+     * Initializes the deck creating an initial stack of a {@link Card}s.
      * If a game is continuing just clear the stacks of cards
      */
     public void initializeDeck() {
@@ -39,7 +39,7 @@ public class Deck {
     }
 
     /**
-     * Shuffle the cards on the deck
+     * Shuffles the cards on the deck
      */
     public void shuffle() {
         Collections.shuffle(cards);
@@ -59,18 +59,18 @@ public class Deck {
     }
 
     /**
-     * Reveal an initial card for the game
+     * Reveals an initial card for the game
      *
-     * @return The first card from cards on deck
+     * @return the first card from cards on deck
      */
     private Card revealInitialCard() {
         return drawCard();
     }
 
     /**
-     * Draw card from deck and remove it from there. If there are no cards, then shuffle already played cards
+     * Draws card from deck and remove it from there. If there are no cards, then shuffle already played cards
      *
-     * @return Card drawn from deck
+     * @return card drawn from deck
      */
     private Card drawCard() {
         if (cards.isEmpty()) {
@@ -83,10 +83,10 @@ public class Deck {
     }
 
     /**
-     * Draw cards in given amount
+     * Draws cards in given amount fromm deck
      *
-     * @param count Amount of cards to draw
-     * @return List of drawn cards
+     * @param count amount of cards to draw from deck
+     * @return list of drawn cards from deck
      */
     private List<Card> drawCards(int count) {
         List<Card> drawnCards = new ArrayList<>();
