@@ -1,0 +1,61 @@
+@startuml
+[*] --> GameInitializing
+
+state GameInitializing {
+  [*] --> CreatingDeck
+  CreatingDeck --> CreatingPlayers
+  CreatingPlayers --> SettingRoundStarter
+  SettingRoundStarter --> WaitingForRoundStart
+}
+
+GameInitializing --> RoundStarting : Initialization done
+
+state RoundStarting {
+  [*] --> ShufflingDeck
+  ShufflingDeck --> DealingCards
+}
+
+RoundStarting --> RoundInProgress : Cards dealing done
+
+state RoundInProgress {
+  [*] --> PlayerTurn
+  PlayerTurn --> SkipTurn : mustSkipTurn
+  PlayerTurn --> DrawCard : mustDrawCard
+  PlayerTurn --> BotTurn : !mustDrawCard
+  PlayerTurn --> HumanTurn : !mustDrawCard
+
+  HumanTurn --> ShowTopCard
+  ShowTopCard --> SelectCard
+
+  BotTurn --> SelectCard
+  
+  SelectCard --> HandleSpecialCard : isSpecial
+
+  HandleSpecialCard --> HandleTwoCard : CardType == TWO
+  HandleSpecialCard --> HandleSkipCard : CardType == SKIP
+  HandleSpecialCard --> HandleReverseCard : CardType == REVERSE
+
+  SkipTurn --> NextPlayer
+  DrawCard --> NextPlayer
+  HandleTwoCard --> NextPlayer
+  HandleSkipCard --> NextPlayer
+  HandleReverseCard --> NextPlayer
+  SelectCard --> NextPlayer : !isSpecial
+
+  NextPlayer --> PlayerTurn : !roundOver
+}
+
+RoundInProgress --> RoundEnded : Round is over
+
+state RoundEnded {
+  [*] --> CalculatingPoints
+  CalculatingPoints --> DisplayingResults
+  DisplayingResults --> CheckingGameEnd
+  CheckingGameEnd --> GameEnded : gameOver
+  CheckingGameEnd --> DeterminingNextStarter : !gameOver
+  DeterminingNextStarter --> RoundStarting
+}
+
+GameEnded --> [*]
+
+@enduml

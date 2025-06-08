@@ -1,0 +1,68 @@
+@startuml
+start
+
+:Initialize Game;
+:Create Deck;
+:Create Players;
+:Set initial round starter;
+
+while (Game not over?) is (yes)
+  :Start New Round;
+  :Shuffle Deck;
+  :Deal Cards to Players;
+  
+  while (Round not over?) is (yes)
+    :Display Game Info;
+    
+	if (Player must skip turn?) then (yes)
+	  :Skip Turn;
+      :Move to next player;
+    else (no)
+	  if (Current Player is Human?) then (yes)
+		:Display Human Player's Cards;
+		:Show Top Card;
+	  else (no)
+		:Bot Player's Turn;
+	  endif
+    
+	  if (Player must draw card?) then (yes)
+		:Draw Card;
+	  else (no)
+		:Select Card to Play;
+		
+		if (Card is Special?) then (yes)
+		  switch (Card Type)
+		  case (TWO)
+			:Handle Two Card;
+			:Next Player Draws 2 Cards;
+		  case (SKIP)
+			:Handle Skip Card;
+			:Skip Next Player;
+		  case (REVERSE)
+			:Handle Reverse Card;
+			:Reverse Game Direction;
+		  endswitch
+		endif
+	  endif
+	  
+	  if (Player has no cards?) then (yes)
+		break
+	  else (no)
+		:Move to Next Player;
+	  endif
+	endif
+  endwhile
+  :Calculate Round Points;
+  :Display Final Results;
+    
+  if(Don't start New Round?) then(yes)
+    :End Game;
+    break
+  else (no)
+    :Determine Next Round Starter;
+  endif
+  
+endwhile
+
+stop
+@enduml

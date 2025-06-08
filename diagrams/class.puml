@@ -1,0 +1,129 @@
+@startuml MauMauClassDiagram
+
+interface PlayerStrategy {
+  +selectCard(Player player, Card topCard): Card
+  +shouldDrawCard(Player player, Card topCard): boolean
+}
+
+class HumanPlayerStrategy {
+  -scanner: Scanner
+  +selectCard(Player player, Card topCard): Card
+  +shouldDrawCard(Player player, Card topCard): boolean
+  -displayGameInfo(Player player, Card topCard)
+  -validateCardInput(Player player, Card topCard): Card
+}
+
+class BotPlayerStrategy {
+  +selectCard(Player player, Card topCard): Card
+  +shouldDrawCard(Player player, Card topCard): boolean
+  -findBestCard(Player player, Card topCard): Card
+  -isCardPlayable(Card card, Card topCard): boolean
+}
+
+class Card {
+  -suit: Suit
+  -rank: Rank
+  +getSuit(): Suit
+  +getRank(): Rank
+  +getValue(): int
+  +toString(): String
+  +isSpecialCard(): boolean
+}
+
+class Deck {
+  -cards: List<Card>
+  +shuffle()
+  +dealCards(int numberOfCards): List<Card>
+  +drawCard(): Card
+  +drawCards(int count): List<Card>
+  +getTopCard(): Card
+  +hasCards(): boolean
+}
+
+class Player {
+  -name: String
+  -hand: List<Card>
+  -wins: int
+  -points: int
+  -mustSkipTurn: boolean
+  +isHuman(): boolean
+  +playCard(card: Card)
+  +drawCard(card: Card)
+  +hasNoCards(): boolean
+  +mustDrawCard(): boolean
+  +displayCards()
+}
+
+class Game {
+  -players: List<Player>
+  -activePlayer: Player
+  -cardDeck: Deck
+  -gameDirection: Direction
+  -roundStarter: Player
+  -currentRound: int
+  -isGameEnded: boolean
+  -startGame()
+  -startNewRound()
+  -nextTurn()
+  -isWinner(Player player): boolean
+  -getStats(): Map<Player, Integer>
+  -displayGameInfo(Player humanPlayer)
+  -handleSpecialCard(Card card)
+  -handleTwoCards(Player nextPlayer)
+  -handleSkipCard()
+  -handleReverseCard()
+  -getNextPlayer(): Player
+  -reverseDirection()
+  -drawCardsForPlayer(Player player, int count)
+  -determineNextRoundStarter()
+  -calculateRoundPoints()
+  -updatePlayerStatistics()
+  -displayRoundResults()
+  -resetRound()
+  -endGame()
+}
+
+enum Suit {
+  HEARTS
+  DIAMONDS
+  CLUBS
+  SPADES
+}
+
+enum Rank {
+  SEVEN(0)
+  EIGHT(0)
+  NINE(0)
+  JACK(2)
+  QUEEN(3)
+  KING(4)
+  TEN(10)
+  ACE(11)
+  +getValue(): int
+}
+
+enum CardType {
+  TWO
+  SKIP
+  REVERSE
+  NORMAL
+}
+
+enum Direction {
+  CLOCKWISE
+  COUNTERCLOCKWISE
+}
+
+PlayerStrategy <|.. HumanPlayerStrategy
+PlayerStrategy <|.. BotPlayerStrategy
+Player "1" *-- "1" PlayerStrategy
+Player "1" *-- "many" Card
+Game "1" *-- "many" Player
+Game "1" *-- "1" Deck
+Game "1" *-- "1" Direction
+Deck "1" *-- "many" Card
+Card "1" *-- "1" Suit
+Card "1" *-- "1" Rank
+Card "1" *-- "1" CardType
+
+@enduml
