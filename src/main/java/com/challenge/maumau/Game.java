@@ -1,9 +1,10 @@
-package com.challenge;
+package com.challenge.maumau;
 
-import com.challenge.models.Card;
-import com.challenge.models.Deck;
-import com.challenge.models.Player;
-import com.challenge.models.enums.Direction;
+import com.challenge.maumau.models.enums.CardType;
+import com.challenge.maumau.models.Card;
+import com.challenge.maumau.models.Deck;
+import com.challenge.maumau.models.Player;
+import com.challenge.maumau.models.enums.Direction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -118,9 +119,21 @@ public class Game {
             // update active card and add it to already played cards
             activeCard = playedCard;
             cardDeck.addCardToPlayedCards(playedCard);
+
+            // check if player has no cards to summarize this round
+            if (activePlayer.hasNoCards()) {
+                summarizeRound();
+            }
         }
 
-        // calculate points and display results after round is over
+        summarizeRound();
+    }
+
+    /**
+     * Calculates points for players and displays results
+     */
+    private void summarizeRound() {
+        // calculate points and display results
         calculateRoundPoints();
         displayFinalResults();
     }
@@ -166,7 +179,7 @@ public class Game {
     }
 
     /**
-     * Handles a special card and takes actions according {@link com.challenge.models.enums.CardType}.
+     * Handles a special card and takes actions according {@link CardType}.
      *
      * @param card a card, to handle his action
      * @return true if game direction has been changed, false if game direction remains same

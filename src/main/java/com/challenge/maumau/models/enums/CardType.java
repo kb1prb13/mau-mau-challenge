@@ -1,4 +1,4 @@
-package com.challenge.models.enums;
+package com.challenge.maumau.models.enums;
 
 /**
  * Card types used in a game

@@ -1,4 +1,4 @@
-package com.challenge.models;
+package com.challenge.maumau.models;
 
 import lombok.Getter;
 import lombok.Setter;

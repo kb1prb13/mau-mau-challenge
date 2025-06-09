@@ -1,8 +1,8 @@
-package com.challenge.models;
+package com.challenge.maumau.models;
 
-import com.challenge.models.enums.CardType;
-import com.challenge.models.enums.Rank;
-import com.challenge.models.enums.Suit;
+import com.challenge.maumau.models.enums.CardType;
+import com.challenge.maumau.models.enums.Rank;
+import com.challenge.maumau.models.enums.Suit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

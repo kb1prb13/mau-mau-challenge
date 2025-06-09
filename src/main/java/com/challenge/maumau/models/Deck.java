@@ -1,7 +1,7 @@
-package com.challenge.models;
+package com.challenge.maumau.models;
 
-import com.challenge.models.enums.Rank;
-import com.challenge.models.enums.Suit;
+import com.challenge.maumau.models.enums.Rank;
+import com.challenge.maumau.models.enums.Suit;
 import lombok.Getter;
 import lombok.Setter;
 
