@@ -55,10 +55,9 @@ public class Player {
     /**
      * Plays best matching {@link Card}, i.e. removes it from players hand
      *
-     * @param playedCard {@link Card} played from previous player or the first card at round start
      * @return best matching {@link Card}, i.e. removed from players hand
      */
-    public Card playCard(Card playedCard) {
+    public Card playCard() {
         // TODO realize strategies to interact with human player and to choose best matching card for PC
         return hand.removeFirst();
     }

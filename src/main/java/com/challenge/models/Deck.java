@@ -3,7 +3,6 @@ package com.challenge.models;
 import com.challenge.models.enums.Rank;
 import com.challenge.models.enums.Suit;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;

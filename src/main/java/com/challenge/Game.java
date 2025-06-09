@@ -110,7 +110,7 @@ public class Game {
             }
 
             // play card
-            Card playedCard = activePlayer.playCard(activeCard);
+            Card playedCard = activePlayer.playCard();
 
             // handle played card action and determine next player according special card action
             activePlayer = getNextPlayer(handlePlayedCard(playedCard));
