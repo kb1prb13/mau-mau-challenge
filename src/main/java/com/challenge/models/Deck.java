@@ -13,12 +13,16 @@ import java.util.List;
 /**
  * Class representing Deck for the game
  */
-@NoArgsConstructor
 @Setter
 @Getter
 public class Deck {
     private List<Card> cards;
     private List<Card> playedCards;
+
+    public Deck() {
+        this.cards = new ArrayList<>();
+        this.playedCards = new ArrayList<>();
+    }
 
     /**
      * Initializes the deck creating an initial stack of a {@link Card}s.
@@ -50,7 +54,7 @@ public class Deck {
      */
     public void dealCards(List<Player> players) {
         for (Player player : players) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 if (!cards.isEmpty()) {
                     player.drawCard(drawCard());
                 }
@@ -59,12 +63,14 @@ public class Deck {
     }
 
     /**
-     * Reveals an initial card for the game
+     * Reveals an initial card for the game and add it to played cards
      *
-     * @return the first card from cards on deck
+     * @return the first card from cards stack on deck
      */
-    private Card revealInitialCard() {
-        return drawCard();
+    public Card revealInitialCard() {
+        Card topCard = drawCard();
+        playedCards.add(topCard);
+        return topCard;
     }
 
     /**
@@ -72,7 +78,7 @@ public class Deck {
      *
      * @return card drawn from deck
      */
-    private Card drawCard() {
+    public Card drawCard() {
         if (cards.isEmpty()) {
             cards = playedCards;
             playedCards.clear();
@@ -88,7 +94,7 @@ public class Deck {
      * @param count amount of cards to draw from deck
      * @return list of drawn cards from deck
      */
-    private List<Card> drawCards(int count) {
+    public List<Card> drawCards(int count) {
         List<Card> drawnCards = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
@@ -96,5 +102,13 @@ public class Deck {
         }
 
         return drawnCards;
+    }
+
+    /**
+     * Adds recently played card to already played cards
+     * @param card recently played card
+     */
+    public void addCardToPlayedCards(Card card) {
+        playedCards.add(card);
     }
 }

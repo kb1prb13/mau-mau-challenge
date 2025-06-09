@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -52,15 +53,19 @@ public class Player {
     }
 
     /**
-     * Play the given {@link Card}, i.e. remove the card from players hand
-     * @param card {@link Card} to play, i.e. remove from hand
+     * Plays best matching {@link Card}, i.e. removes it from players hand
+     *
+     * @param playedCard {@link Card} played from previous player or the first card at round start
+     * @return best matching {@link Card}, i.e. removed from players hand
      */
-    private void playCard(Card card) {
-        hand.remove(card);
+    public Card playCard(Card playedCard) {
+        // TODO realize strategies to interact with human player and to choose best matching card for PC
+        return hand.removeFirst();
     }
 
     /**
      * Draw given {@link Card}, i.e. add card to players hand
+     *
      * @param card {@link Card} to draw, i.e. add to hand
      */
     public void drawCard(Card card) {
@@ -68,10 +73,29 @@ public class Player {
     }
 
     /**
+     * Draws given amount of {@link Card}, i.e. add cards to players hand
+     *
+     * @param cards {@link List<Card>} to draw, i.e. add them to hand
+     */
+    public void drawCards(List<Card> cards) {
+        hand.addAll(cards);
+    }
+
+    /**
      * Check if player has no cards. Used to determine the game end
+     *
      * @return true if player has no cards
      */
     public boolean hasNoCards() {
         return hand.isEmpty();
+    }
+
+    /**
+     * Returns players cards in readable format
+     *
+     * @return players cards in readable format
+     */
+    public String getHandAsString() {
+        return Arrays.toString(hand.toArray()).replace("[", "").replace("]", "");
     }
 }
