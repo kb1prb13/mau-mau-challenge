@@ -1,0 +1,152 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class Card {
+  - rank: Rank
+  - suit: Suit
+  + getRankValue(): int
+  + getRank(): Rank
+  + getSuit(): Suit
+  + setRank(Rank): void
+  + setSuit(Suit): void
+  + getCardType(): CardType
+  + toString(): String
+  + isSpecialCard(): boolean
+}
+enum CardType << enumeration >> {
+  + REVERSE:
+  + SKIP:
+  + NORMAL:
+  + TWO:
+  + values(): CardType[]
+  + valueOf(String): CardType
+}
+class Deck {
+  - playedCards: List<Card>
+  - cards: List<Card>
+  + getCards(): List<Card>
+  + getPlayedCards(): List<Card>
+  + setCards(List<Card>): void
+  + setPlayedCards(List<Card>): void
+  + revealInitialCard(): Card
+  + drawCards(int): List<Card>
+  + addCardToPlayedCards(Card): void
+  + dealCards(List<Player>): void
+  + initializeDeck(): void
+  + shuffle(): void
+  + drawCard(): Card
+}
+enum Direction << enumeration >> {
+  + COUNTERCLOCKWISE:
+  + CLOCKWISE:
+  + values(): Direction[]
+  + valueOf(String): Direction
+}
+class Game {
+  - activeCard: Card
+  - players: List<Player>
+  - isGameEnded: boolean
+  - roundStarter: Player
+  - activePlayer: Player
+  - cardDeck: Deck
+  - gameDirection: Direction
+  - currentRound: int
+  + getActivePlayer(): Player
+  + setActivePlayer(Player): void
+  + getPlayers(): List<Player>
+  + getCardDeck(): Deck
+  + getGameDirection(): Direction
+  + setGameDirection(Direction): void
+  + getRoundStarter(): Player
+  + setCardDeck(Deck): void
+  + setActiveCard(Card): void
+  + setCurrentRound(int): void
+  + getCurrentRound(): int
+  + isGameEnded(): boolean
+  + setRoundStarter(Player): void
+  + setGameEnded(boolean): void
+  + getActiveCard(): Card
+  + setPlayers(List<Player>): void
+  + handlePlayedCard(Card): boolean
+  + displayOtherPlayersCardsCount(): void
+  + getNextPlayer(boolean): Player
+  + reverseDirection(): void
+  + calculateRoundPoints(): void
+  + startGame(): void
+  + startNewRound(): void
+  + setRoundStarter(): void
+  - playRound(): void
+  + displayFinalResults(): void
+  + isRoundOver(): boolean
+  + displayGameInfo(): void
+}
+class Main {
+  + main(String[]): void
+}
+class Player {
+  - mustSkipTurn: boolean
+  - name: String
+  - wins: int
+  - points: int
+  - isHuman: boolean
+  - mustDrawCards: boolean
+  - hand: List<Card>
+  + getWins(): int
+  + getName(): String
+  + getHand(): List<Card>
+  + getPoints(): int
+  + isHuman(): boolean
+  + isMustSkipTurn(): boolean
+  + setMustDrawCards(boolean): void
+  + setMustSkipTurn(boolean): void
+  + isMustDrawCards(): boolean
+  + setName(String): void
+  + setPoints(int): void
+  + setHand(List<Card>): void
+  + setWins(int): void
+  + setHuman(boolean): void
+  + drawCards(List<Card>): void
+  + drawCard(Card): void
+  + getHandAsString(): String
+  + playCard(Card): Card
+  + hasNoCards(): boolean
+}
+enum Rank << enumeration >> {
+  - value: int
+  + EIGHT:
+  + ACE:
+  + NINE:
+  + JACK:
+  + TEN:
+  + QUEEN:
+  + SEVEN:
+  + KING:
+  + getValue(): int
+  + valueOf(String): Rank
+  + values(): Rank[]
+}
+enum Suit << enumeration >> {
+  + HEART:
+  + SPADE:
+  + DIAMOND:
+  + CLUB:
+  + valueOf(String): Suit
+  + values(): Suit[]
+}
+
+Card      "1" *-[#595959,plain]-> "rank\n1" Rank
+Card      "1" *-[#595959,plain]-> "suit\n1" Suit
+Deck      "1" *-[#595959,plain]-> "cards\n*" Card
+Deck       -[#595959,dashed]->  Card      : "«create»"
+Game      "1" *-[#595959,plain]-> "activeCard\n1" Card
+Game      "1" *-[#595959,plain]-> "cardDeck\n1" Deck
+Game       -[#595959,dashed]->  Deck      : "«create»"
+Game      "1" *-[#595959,plain]-> "gameDirection\n1" Direction
+Game      "1" *-[#595959,plain]-> "players\n*" Player
+Main       -[#595959,dashed]->  Game      : "«create»"
+Main       -[#595959,dashed]->  Player    : "«create»"
+Player    "1" *-[#595959,plain]-> "hand\n*" Card
+@enduml

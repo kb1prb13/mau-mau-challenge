@@ -20,27 +20,27 @@ RoundStarting --> RoundInProgress : Cards dealing done
 state RoundInProgress {
   [*] --> PlayerTurn
   PlayerTurn --> SkipTurn : mustSkipTurn
-  PlayerTurn --> DrawCard : mustDrawCard
+  PlayerTurn --> DrawCards : mustDrawCard
   PlayerTurn --> BotTurn : !mustDrawCard
   PlayerTurn --> HumanTurn : !mustDrawCard
 
   HumanTurn --> ShowTopCard
-  ShowTopCard --> SelectCard
+  ShowTopCard --> PlayCard
 
-  BotTurn --> SelectCard
+  BotTurn --> PlayCard
   
-  SelectCard --> HandleSpecialCard : isSpecial
+  PlayCard --> HandleSpecialCard : isSpecial
 
-  HandleSpecialCard --> HandleTwoCard : CardType == TWO
+  HandleSpecialCard --> HandleTwoCards : CardType == TWO
   HandleSpecialCard --> HandleSkipCard : CardType == SKIP
   HandleSpecialCard --> HandleReverseCard : CardType == REVERSE
 
   SkipTurn --> NextPlayer
-  DrawCard --> NextPlayer
-  HandleTwoCard --> NextPlayer
+  DrawCards --> NextPlayer : Skip turn
+  HandleTwoCards --> NextPlayer
   HandleSkipCard --> NextPlayer
   HandleReverseCard --> NextPlayer
-  SelectCard --> NextPlayer : !isSpecial
+  PlayCard --> NextPlayer : !isSpecial
 
   NextPlayer --> PlayerTurn : !roundOver
 }
