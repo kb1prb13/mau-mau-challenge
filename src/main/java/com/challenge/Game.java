@@ -1,5 +1,8 @@
-package com.challenge.models;
+package com.challenge;
 
+import com.challenge.models.Card;
+import com.challenge.models.Deck;
+import com.challenge.models.Player;
 import com.challenge.models.enums.Direction;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Class representing a gameplay and all actions during game
+ * Class representing a gameplay and all actions during the game
  */
 @AllArgsConstructor
 @Setter
@@ -25,7 +28,7 @@ public class Game {
      */
     private Player activePlayer;
     /**
-     * Deck for the game
+     * Deck for game cards
      */
     private Deck cardDeck;
     /**
@@ -44,6 +47,10 @@ public class Game {
      * Flag for game end
      */
     private boolean isGameEnded;
+    /**
+     * The last played card or initial card at the game start
+     */
+    private Card activeCard;
 
     public Game() {
         this.players = new ArrayList<>();
@@ -63,17 +70,69 @@ public class Game {
     /**
      * Starts the round by initializing deck, shuffling and dealing cards to the players
      * and choosing the starting player for round
-     * */
+     */
     public void startNewRound() {
         cardDeck.initializeDeck();
         cardDeck.shuffle();
         cardDeck.dealCards(players);
         setRoundStarter();
+        activeCard = cardDeck.revealInitialCard();
 
         // set round starter player as active player
         activePlayer = roundStarter;
         // increment the round count, as the round is started
         currentRound++;
+
+        // start playing the game
+        playRound();
+    }
+
+    /**
+     * Controls the game process inside the round
+     */
+    private void playRound() {
+        // the whole process of the turn for each player
+        // run while loop till round is over
+        while (isRoundOver()) {
+            // check if active player has to draw cards or/and skip turn
+            if (activePlayer.isMustDrawCards()) {
+                activePlayer.drawCards(cardDeck.drawCards(2));
+                activePlayer = getNextPlayer(false);
+                continue;
+            } else if (activePlayer.isMustSkipTurn()) {
+                activePlayer = getNextPlayer(false);
+                continue;
+            }
+
+            // display the game info if active player is a human player
+            if (activePlayer.isHuman()) {
+                displayGameInfo();
+            }
+
+            // play card
+            Card playedCard = activePlayer.playCard(activeCard);
+
+            // handle played card action and determine next player according special card action
+            activePlayer = getNextPlayer(handlePlayedCard(playedCard));
+
+            // update active card and add it to already played cards
+            activeCard = playedCard;
+            cardDeck.addCardToPlayedCards(playedCard);
+        }
+
+        // calculate points and display results after round is over
+        calculateRoundPoints();
+        displayFinalResults();
+    }
+
+    /**
+     * Prints cards of active player, the top card, and an amount of cards of players
+     */
+    public void displayGameInfo() {
+        System.out.format("You have %s cards: %s\n", activePlayer.getHand().size(), activePlayer.getHandAsString());
+        System.out.println("Top card is: " + activeCard.toString());
+
+        displayOtherPlayersCardsCount();
     }
 
     /**
@@ -99,6 +158,7 @@ public class Game {
 
     /**
      * Checks if one of players has no cards
+     *
      * @return true if one of players has no cards
      */
     public boolean isRoundOver() {
@@ -106,14 +166,15 @@ public class Game {
     }
 
     /**
-     * Handles a special card and takes action according {@link com.challenge.models.enums.CardType}.
-     * Also sets the next player, because direction change card affects on game
-     * @param card a card to take an action
+     * Handles a special card and takes actions according {@link com.challenge.models.enums.CardType}.
+     *
+     * @param card a card, to handle his action
+     * @return true if game direction has been changed, false if game direction remains same
      */
-    public void handleSpecialCard(Card card) {
+    public boolean handlePlayedCard(Card card) {
         // get the next player
         Player nextPlayer = getNextPlayer(false);
-        
+
         // actions must take only for special cards
         // set parameters if the next player must take cards, skip his turn or game direction changed
         if (card.isSpecialCard()) {
@@ -122,14 +183,12 @@ public class Game {
                 case SKIP -> nextPlayer.setMustSkipTurn(true);
                 default -> {
                     reverseDirection();
-
-                    // TODO change the logic to avoid setting next player in this method
-                    nextPlayer = getNextPlayer(true);
+                    return true;
                 }
             }
         }
 
-         activePlayer = nextPlayer;
+        return false;
     }
 
     /**
@@ -145,6 +204,7 @@ public class Game {
 
     /**
      * Returns the next player, taking into account the change of direction
+     *
      * @param directionReversed flag if direction is reversed or changed
      * @return the next player, taking into account the direction change too
      */
@@ -157,7 +217,7 @@ public class Game {
         if (directionReversed) {
             return activePlayerIndex == 0 ? players.getLast() : players.get(activePlayerIndex - 1);
         }
-        
+
         // get and return the next player after current
         return activePlayerIndex == lastPlayerIndex ? players.getFirst() : players.get(activePlayerIndex + 1);
     }
@@ -187,11 +247,21 @@ public class Game {
      * Displays game results in a readable format
      */
     public void displayFinalResults() {
-        System.out.println("\nGame Results:\n");
+        System.out.println(System.lineSeparator() + "Game Results:");
         for (Player player : players) {
-            System.out.println(player.getName() + ":");
-            System.out.println("\nWins: " + player.getWins());
-            System.out.println("\nPoints: " + player.getPoints());
+            System.out.println(player.getName() + ": ");
+            System.out.println("Wins: " + player.getWins());
+            System.out.println("Points: " + player.getPoints() + System.lineSeparator());
         }
+    }
+
+    /**
+     * Prints the amount of cards of players except active
+     */
+    public void displayOtherPlayersCardsCount() {
+        System.out.println("Cards number of other players: ");
+        players.stream()
+                .filter(p -> !p.equals(activePlayer))
+                .forEach(p -> System.out.println(p.getName() + " has " + p.getHand().size() + " cards"));
     }
 }
